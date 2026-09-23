@@ -1,0 +1,37 @@
+value_key = "answers.q.noul"
+cluster_key = "item"
+stratum_key = "cut"
+request_span = "jev.classify"
+model_key = "model"
+model_pin = "jev-1.13.0"
+exemptions = ["x-request-id"]
+headers = "not_recorded"
+retries = "not_recorded"
+bootstrap_b = 10000
+bootstrap_seed = 20260921
+floor = 0.01
+declared_window_s = 1200.0
+conditioning = "items chosen to sit beside a cut; not a rate for production traffic"
+price_per_input_token = 0.000000042
+token_cap = 7000000
+
+[[cuts]]
+name = "0.50"
+threshold = 0.50
+comparison = "gt"
+
+[[cuts]]
+name = "0.60"
+threshold = 0.60
+comparison = "gt"
+
+[[cuts]]
+name = "0.90"
+threshold = 0.90
+comparison = "gt"
+
+[[sweeps]]
+name = "S2"
+a = "S2-a"
+b = "S2-b"
+more = ["S2-3", "S2-4", "S2-5"]
