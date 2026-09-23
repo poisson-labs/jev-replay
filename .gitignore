@@ -1,0 +1,50 @@
+# Devlogs live in the vault only (repo hygiene standard §2.7)
+devlog.md
+DEVLOG*
+devlog*
+
+# Internal agent tooling and workflow files
+.claude/
+.cursor/
+.agents/
+scratch/
+runbooks/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv
+venv/
+ENV/
+env/
+
+# IDE and OS
+.DS_Store
+.idea/
+.vscode/
+
+# Testing & quality
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
