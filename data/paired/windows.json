@@ -1,0 +1,124 @@
+{
+  "declaration_digest": "1d6059e0a8e2a8d848945f71e6be9f72e23667e5e42c11e01874d0fd8f25b4b9",
+  "per_sweep": [
+    {
+      "sweep": "S1",
+      "timing": "available",
+      "reason": null,
+      "arms": {
+        "a": {
+          "first_start_ns": 1790172670370180000,
+          "last_end_ns": 1790172723527172000
+        },
+        "b": {
+          "first_start_ns": 1790172723569359000,
+          "last_end_ns": 1790172776030252000
+        },
+        "3": {
+          "first_start_ns": 1790172776072155000,
+          "last_end_ns": 1790172830159736000
+        },
+        "4": {
+          "first_start_ns": 1790172830196469000,
+          "last_end_ns": 1790172883256421000
+        },
+        "5": {
+          "first_start_ns": 1790172883294999000,
+          "last_end_ns": 1790172938249936000
+        }
+      },
+      "realized_span_s": 267.879756,
+      "declared_window_s": 1200.0,
+      "claim": "held",
+      "latency_s": {
+        "median": 0.24169649999999998,
+        "n": 4232
+      }
+    },
+    {
+      "sweep": "S2",
+      "timing": "available",
+      "reason": null,
+      "arms": {
+        "a": {
+          "first_start_ns": 1790173043075777000,
+          "last_end_ns": 1790173098128914000
+        },
+        "b": {
+          "first_start_ns": 1790173098171312000,
+          "last_end_ns": 1790173153157370000
+        },
+        "3": {
+          "first_start_ns": 1790173153197101000,
+          "last_end_ns": 1790173206165549000
+        },
+        "4": {
+          "first_start_ns": 1790173206207410000,
+          "last_end_ns": 1790173270398460000
+        },
+        "5": {
+          "first_start_ns": 1790173270437784000,
+          "last_end_ns": 1790173326433379000
+        }
+      },
+      "realized_span_s": 283.357602,
+      "declared_window_s": 1200.0,
+      "claim": "held",
+      "latency_s": {
+        "median": 0.248991,
+        "n": 4235
+      }
+    },
+    {
+      "sweep": "S3",
+      "timing": "available",
+      "reason": null,
+      "arms": {
+        "a": {
+          "first_start_ns": 1790173336220554000,
+          "last_end_ns": 1790173394364125000
+        },
+        "b": {
+          "first_start_ns": 1790173394422318000,
+          "last_end_ns": 1790173449585573000
+        },
+        "3": {
+          "first_start_ns": 1790173449641835000,
+          "last_end_ns": 1790173506191818000
+        },
+        "4": {
+          "first_start_ns": 1790173506243660000,
+          "last_end_ns": 1790173559651708000
+        },
+        "5": {
+          "first_start_ns": 1790173559706912000,
+          "last_end_ns": 1790173611253556000
+        }
+      },
+      "realized_span_s": 275.033002,
+      "declared_window_s": 1200.0,
+      "claim": "held",
+      "latency_s": {
+        "median": 0.246673,
+        "n": 4235
+      }
+    }
+  ],
+  "replay_gap": {
+    "0.50": {
+      "min": 53.056384,
+      "median": 55.616799,
+      "max": 58.465522
+    },
+    "0.60": {
+      "min": 52.003649,
+      "median": 56.255637,
+      "max": 57.071705
+    },
+    "0.90": {
+      "min": 51.69933,
+      "median": 55.167829,
+      "max": 55.894865
+    }
+  }
+}

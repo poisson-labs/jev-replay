@@ -1,0 +1,163 @@
+{
+  "declaration_digest": "1d6059e0a8e2a8d848945f71e6be9f72e23667e5e42c11e01874d0fd8f25b4b9",
+  "phases": [
+    {
+      "phase": "S1",
+      "run_id": "S1-a",
+      "sweep": "S1",
+      "arm": "a",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S1",
+      "run_id": "S1-b",
+      "sweep": "S1",
+      "arm": "b",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S1",
+      "run_id": "S1-3",
+      "sweep": "S1",
+      "arm": "3",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S1",
+      "run_id": "S1-4",
+      "sweep": "S1",
+      "arm": "4",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S1",
+      "run_id": "S1-5",
+      "sweep": "S1",
+      "arm": "5",
+      "input_tokens": 324617,
+      "output_tokens": 16920,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S2",
+      "run_id": "S2-a",
+      "sweep": "S2",
+      "arm": "a",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S2",
+      "run_id": "S2-b",
+      "sweep": "S2",
+      "arm": "b",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S2",
+      "run_id": "S2-3",
+      "sweep": "S2",
+      "arm": "3",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S2",
+      "run_id": "S2-4",
+      "sweep": "S2",
+      "arm": "4",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S2",
+      "run_id": "S2-5",
+      "sweep": "S2",
+      "arm": "5",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S3",
+      "run_id": "S3-a",
+      "sweep": "S3",
+      "arm": "a",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S3",
+      "run_id": "S3-b",
+      "sweep": "S3",
+      "arm": "b",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S3",
+      "run_id": "S3-3",
+      "sweep": "S3",
+      "arm": "3",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S3",
+      "run_id": "S3-4",
+      "sweep": "S3",
+      "arm": "4",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    },
+    {
+      "phase": "S3",
+      "run_id": "S3-5",
+      "sweep": "S3",
+      "arm": "5",
+      "input_tokens": 325139,
+      "output_tokens": 16940,
+      "recorded_spans": 847,
+      "unrecorded_spans": 0
+    }
+  ],
+  "input_tokens": 4876563,
+  "output_tokens": 254080,
+  "recorded_spans": 12705,
+  "unrecorded_spans": 0,
+  "price_per_input_token": "0.000000042",
+  "dollars": "0.204815646",
+  "token_cap": 7000000,
+  "cap_reached": false
+}

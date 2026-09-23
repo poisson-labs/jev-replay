@@ -1,0 +1,239 @@
+{
+  "declaration_digest": "1d6059e0a8e2a8d848945f71e6be9f72e23667e5e42c11e01874d0fd8f25b4b9",
+  "cuts": {
+    "0.50": {
+      "threshold": "0.50",
+      "comparison": "gt",
+      "n": {
+        "items": 286,
+        "sweeps": 3
+      },
+      "flip_rate": {
+        "estimate": 0.1853146853146853,
+        "lo": 0.15384615384615385,
+        "hi": 0.21794871794871795,
+        "basis": "cluster_bootstrap"
+      },
+      "net_swing": {
+        "estimate": 0.017482517482517484,
+        "lo": -0.01282051282051282,
+        "hi": 0.047785547785547784,
+        "basis": "cluster_bootstrap",
+        "direction": "b_minus_a"
+      },
+      "design_effect": {
+        "icc": 0.2602006327231431,
+        "m_bar": 3.0,
+        "deff": 1.5204012654462862
+      },
+      "per_sweep": {
+        "S1": {
+          "rate_a": 0.3881118881118881,
+          "rate_b": 0.4090909090909091,
+          "flip_rate": {
+            "estimate": 0.16083916083916083,
+            "lo": 0.12022493441814232,
+            "hi": 0.20864560699102644,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": 0.02097902097902098,
+            "direction": "b_minus_a"
+          }
+        },
+        "S2": {
+          "rate_a": 0.3741258741258741,
+          "rate_b": 0.3986013986013986,
+          "flip_rate": {
+            "estimate": 0.19230769230769232,
+            "lo": 0.14828304553008953,
+            "hi": 0.2428356255389663,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": 0.024475524475524476,
+            "direction": "b_minus_a"
+          }
+        },
+        "S3": {
+          "rate_a": 0.4020979020979021,
+          "rate_b": 0.4090909090909091,
+          "flip_rate": {
+            "estimate": 0.20279720279720279,
+            "lo": 0.1577445041815074,
+            "hi": 0.25412578038208217,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": 0.006993006993006993,
+            "direction": "b_minus_a"
+          }
+        }
+      },
+      "ineligibility_rate": 0.0,
+      "outcome": "B",
+      "outcome_interval": {
+        "estimate": 0.1853146853146853,
+        "lo": 0.15384615384615385,
+        "hi": 0.21794871794871795,
+        "basis": "cluster_bootstrap"
+      }
+    },
+    "0.60": {
+      "threshold": "0.60",
+      "comparison": "gt",
+      "n": {
+        "items": 261,
+        "sweeps": 3
+      },
+      "flip_rate": {
+        "estimate": 0.18518518518518517,
+        "lo": 0.1545338441890166,
+        "hi": 0.21711366538952745,
+        "basis": "cluster_bootstrap"
+      },
+      "net_swing": {
+        "estimate": 0.02681992337164751,
+        "lo": -0.002554278416347382,
+        "hi": 0.0561941251596424,
+        "basis": "cluster_bootstrap",
+        "direction": "b_minus_a"
+      },
+      "design_effect": {
+        "icc": 0.1634890371782649,
+        "m_bar": 3.0,
+        "deff": 1.3269780743565298
+      },
+      "per_sweep": {
+        "S1": {
+          "rate_a": 0.3831417624521073,
+          "rate_b": 0.421455938697318,
+          "flip_rate": {
+            "estimate": 0.1839080459770115,
+            "lo": 0.138823220728321,
+            "hi": 0.23633176774454773,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": 0.038314176245210725,
+            "direction": "b_minus_a"
+          }
+        },
+        "S2": {
+          "rate_a": 0.36015325670498083,
+          "rate_b": 0.3831417624521073,
+          "flip_rate": {
+            "estimate": 0.17624521072796934,
+            "lo": 0.13201776118103525,
+            "hi": 0.2279955576694811,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": 0.022988505747126436,
+            "direction": "b_minus_a"
+          }
+        },
+        "S3": {
+          "rate_a": 0.3946360153256705,
+          "rate_b": 0.41379310344827586,
+          "flip_rate": {
+            "estimate": 0.19540229885057472,
+            "lo": 0.14908823460623702,
+            "hi": 0.24878052818804333,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": 0.019157088122605363,
+            "direction": "b_minus_a"
+          }
+        }
+      },
+      "ineligibility_rate": 0.0,
+      "outcome": "B",
+      "outcome_interval": {
+        "estimate": 0.18518518518518517,
+        "lo": 0.1545338441890166,
+        "hi": 0.21711366538952745,
+        "basis": "cluster_bootstrap"
+      }
+    },
+    "0.90": {
+      "threshold": "0.90",
+      "comparison": "gt",
+      "n": {
+        "items": 300,
+        "sweeps": 3
+      },
+      "flip_rate": {
+        "estimate": 0.05333333333333334,
+        "lo": 0.035555555555555556,
+        "hi": 0.07222222222222222,
+        "basis": "cluster_bootstrap"
+      },
+      "net_swing": {
+        "estimate": -0.0022222222222222222,
+        "lo": -0.015555555555555555,
+        "hi": 0.011111111111111112,
+        "basis": "cluster_bootstrap",
+        "direction": "b_minus_a"
+      },
+      "design_effect": {
+        "icc": 0.29702194357366757,
+        "m_bar": 3.0,
+        "deff": 1.5940438871473352
+      },
+      "per_sweep": {
+        "S1": {
+          "rate_a": 0.55,
+          "rate_b": 0.5333333333333333,
+          "flip_rate": {
+            "estimate": 0.05,
+            "lo": 0.02825120196849638,
+            "hi": 0.08112735717076422,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": -0.016666666666666666,
+            "direction": "b_minus_a"
+          }
+        },
+        "S2": {
+          "rate_a": 0.5566666666666666,
+          "rate_b": 0.5466666666666666,
+          "flip_rate": {
+            "estimate": 0.056666666666666664,
+            "lo": 0.033353311516684594,
+            "hi": 0.08918040443416299,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": -0.01,
+            "direction": "b_minus_a"
+          }
+        },
+        "S3": {
+          "rate_a": 0.5366666666666666,
+          "rate_b": 0.5566666666666666,
+          "flip_rate": {
+            "estimate": 0.05333333333333334,
+            "lo": 0.03078831977347806,
+            "hi": 0.08516676490951426,
+            "basis": "exact_binomial"
+          },
+          "net_swing": {
+            "estimate": 0.02,
+            "direction": "b_minus_a"
+          }
+        }
+      },
+      "ineligibility_rate": 0.0,
+      "outcome": "B",
+      "outcome_interval": {
+        "estimate": 0.05333333333333334,
+        "lo": 0.035555555555555556,
+        "hi": 0.07222222222222222,
+        "basis": "cluster_bootstrap"
+      }
+    }
+  }
+}
