@@ -48,3 +48,4 @@ env/
 .ruff_cache/
 .coverage
 htmlcov/
+output.txt
