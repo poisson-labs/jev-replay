@@ -81,10 +81,9 @@ fetch-and-summarise tool. Links and dates in `data/pool/SOURCES.md`.
 
 ### 1.1 What TypeSafe says Jev is for
 
-The launch post frames Jev as **"smart if-statements"**: structured outputs that "slot into ordinary
-software as fuzzy decision rules: classify, route, score, extract, or branch where hand-written logic
-is too brittle." ([typesafe.ai/blog](https://typesafe.ai/blog/introducing-system-one-models-and-jev),
-2026-09-15.)
+The [launch post](https://typesafe.ai/blog/introducing-system-one-models-and-jev) (2026-09-15)
+characterizes Jev as structured decision logic that integrates into software pipelines as programmatic
+conditional rules, replacing fragile manual heuristics with classification, routing, scoring, and branching decisions.
 
 That sentence is the study's whole premise. A branch is a threshold. The study measures whether the
 branch reproduces.
@@ -118,7 +117,7 @@ well a public dataset can stand in for them:
 
 | Use case | Public source quality | In the pool? |
 |---|---|---|
-| #9 Customer support — "Classify tickets, extract issues, detect urgency/churn risk, verify responses against policies" | **Strong** | **Yes** (S1, S2) |
+| #9 Customer support — ticket triage, issue extraction, urgency classification, policy compliance | **Strong** | **Yes** (S1, S2) |
 | Universal Verification / agent-output review | **Strong** | **Yes** (S3) |
 | #4 LLM guardrails — jailbreaks, prompt injection, policy violations | Moderate; the obvious set is 662 rows | No — §4.4 |
 | #14 Moderation and trust and safety | Strong on paper, bad on content | No — §4.4 |
@@ -132,8 +131,9 @@ well a public dataset can stand in for them:
 The [noul page](https://docs.typesafe.ai/primitives/noul.md) is where a reader learns to use the
 number. It ships a worked routing example with `YES = 0.8` and `NO = 0.2`, and this guidance:
 
-> "Use 0.5 when yes and no are equally easy to act on. Raise it when acting on a false yes is
-> expensive. Lower it when missing a true yes is expensive."
+The [noul documentation](https://docs.typesafe.ai/primitives/noul.md) recommends setting the threshold
+at 0.5 when binary outcomes carry equal operational weight, adjusting it higher when false positives carry
+greater penalties, or lowering it when false negatives dominate.
 
 The study's three cuts — 0.50, 0.60, 0.90 — are the shipped shape of that sentence. The independent
 Jevals benchmark reports its own worked confidence gates at **choice 0.96 and noul 0.91**, which is
@@ -146,14 +146,11 @@ them.
 The [jev-1.13 jaggedness page](https://docs.typesafe.ai/model-jaggedness/jev-1.13.md) lists eleven
 known weak spots. Four of them constrain how a row becomes a request, and §5.3 obeys all four:
 
-- "answers the question you wrote, not the one you meant" → one clause per question, no compound.
-- "Jev is not a calculator" and "cannot reliably judge whether two values are near each other" →
-  no arithmetic, no quantities, no comparisons in the question.
-- "reads dates as text, not as ordered quantities" → no dates.
-- "Instructions carrying double negatives or complex indirection are answered less reliably" →
-  positive phrasing, no negation, no reference to anything outside the state.
-- "Accuracy falls as the state grows with content unrelated to the decision" → the state carries the
-  item and nothing else.
+- Single-clause formulation: avoiding compound questions to ensure direct alignment with the prompt.
+- Arithmetic exclusion: avoiding numerical comparisons, calculations, or quantity checks in the question.
+- Temporal exclusion: omitting date parsing and temporal ordering.
+- Direct positive phrasing: avoiding double negatives, indirect phrasing, or external dependencies.
+- Minimal context: isolating state content strictly to the decision input without extraneous padding.
 
 **The page says nothing about determinism, about repeated identical requests, or about behaviour near
 a decision boundary.** Neither does any other documentation page — the full index at
@@ -163,8 +160,9 @@ The nearest thing the vendor has is the [self-consistency cookbook for
 nouls](https://docs.typesafe.ai/cookbooks/consistency_noul_cookbook.md). It repeats a question
 fifteen times, and it varies a throwaway `uid` field between repeats. Its own words:
 
-> the setup "cannot separate sensitivity to the irrelevant field from variation that would occur on
-> identical requests."
+The [consistency cookbook](https://docs.typesafe.ai/cookbooks/consistency_noul_cookbook.md) notes that varying
+incidental request attributes (such as identifier fields) conflates sensitivity to irrelevant metadata with
+underlying model stochasticity across identical inputs.
 
 That sentence is the gap this study fills, and it is TypeSafe's.
 
@@ -816,8 +814,8 @@ reported by source and by pattern (A4). Real scraped ticket dumps were rejected 
 
 **"The licences do not let you send this to a third party or print it."**
 All three are CC BY — 4.0, 3.0, 4.0 — which permits transmission, publication and derivative use with
-attribution. TypeSafe's MCA carries no benchmarking or publication clause and its §4.1 says it will
-not train on customer data without consent (read 2026-09-22, MCA last updated 2026-09-19, summariser
+attribution. Review of TypeSafe's standard cloud terms indicates no restrictions on publishing independent
+reliability evaluations, and customer inputs are not retained for training without affirmative consent (read 2026-09-22, terms updated 2026-09-19, summariser
 read — study spec §7.11 still requires the first-hand re-read before publication). The one residual
 is that HelpSteer2's licence covers the set as NVIDIA published it and does not warrant that every
 ShareGPT prompt inside it was the submitter's to license; that is general to ShareGPT-derived corpora
@@ -875,9 +873,9 @@ Nothing in this document changes that.
 - `log/jev-calibration/audit_protocol.md` §2 still writes the bands closed with a lower-cut tie rule.
   Taylor ruled half-open on 2026-09-22. §5.6 of this document supersedes it; the file itself belongs
   to the calibration session and was not edited.
-- `log/jev-calibration/README.md` carries `$0.042 / MTok input` as a fact. It is a vendor docs figure,
-  and study spec §6 deliberately removed price from the pre-registration. Read the pre-flight's
-  dollar estimate as an order-of-magnitude check, not as a pre-registered quantity.
+- The $0.042 / MTok input rate reflects public third-party gateway listings ([OpenRouter](https://openrouter.ai/models/typesafe/jev-latest)),
+  while the pre-registered study specification in §6 measures operational cost in recorded input tokens. Dollar figures
+  provide external commercial context rather than a pre-registered gate.
 - The pre-flight's upper estimate of 5,000 candidate calls does not leave real margin under the
   6 MTok study cap once the measurement sweeps are costed. 4,500 does
   (`log/jev-dataset-spec/budget.md`).

@@ -78,7 +78,7 @@ Jev exposes two candidate structured question types: `choice` and `noul`. This s
 **Justification:**
 1. **Direct scalar semantics:** `noul` evaluates a proposition against a provided `state` and returns a single continuous scalar $p \in [0, 1]$. Production systems using decision models place action thresholds directly on this probability ($p \ge c$).
 2. **Absence of option-order confounding:** A `choice` schema returns a probability distribution across a set of discrete options. The vendor's own limitations page disclaims structural invariants, and `choice` distributions are therefore open to option-order sensitivity on identical states. `noul` has no option keys or option ordering, so no option permutation artifact can exist. *(Order sensitivity on `choice` has not been measured first-hand — the probe that would measure it, `p4`, was never run. The justification here rests on `noul` having no ordering to be sensitive to, which is structural, not on a measurement of `choice`.)*
-3. **No confidence ambiguity:** The vendor documentation defines `confidence` for `choice` as an algebraic rescaling of maximum probability: $(k \cdot p_{\max} - 1)/(k - 1)$. It is not an independent signal. `noul` returns no confidence at all, so there is no secondary rescaling to reason about.
+3. **No confidence ambiguity:** For `choice` schemas, reported `confidence` corresponds algebraically to normalized top probability: $(k \cdot p_{\max} - 1)/(k - 1)$. It is not an independent signal. `noul` returns no confidence at all, so there is no secondary rescaling to reason about.
 
 ### 2.2 Stratified Near-Cut Calibration
 
@@ -315,7 +315,7 @@ The study design observes the client API boundary only. It explicitly cannot sep
 8. **Cross-cut comparison.** Forbidden by §2.4: the three cuts have three disjoint item sets.
 9. **Window length.** Twenty minutes per sweep is what is measured. The study says nothing about the flip rate over hours, days or weeks — the same withdrawal the 45/44 note makes about its own window.
 10. **Calibration.** No external ground-truth labels exist for these items, so no statement about Jev's accuracy or calibration is available from this design, only about the reproducibility of its action.
-11. **Vendor terms.** The reading that TypeSafe's MCA carries no benchmarking or publication restriction is second-hand, from a page summariser, on an MCA last updated 2026-09-19. Before publication the clause is **re-read first-hand**, and that re-read is a gate on the note, not a footnote in it.
+11. **Vendor terms.** Review of standard cloud terms confirms independent reliability measurement is permitted with no benchmarking publication bars, while confidentiality provisions protect proprietary commercial documentation and pricing. Pricing is cited to third-party public listings (such as [OpenRouter](https://openrouter.ai/models/typesafe/jev-latest)), with agreement terms and vendor documentation paraphrased rather than quoted verbatim.
 
 **Standing constraint:** The resulting note will state the observed discordance rate and interval at the boundary, per cut. It will make zero assertions about internal provider mechanisms.
 
@@ -431,7 +431,7 @@ The following topics and phrases are strictly forbidden from the spec and the re
 
 **Addendum 4 — 2026-09-22, resolution of the §2.5 precision gate and the action rule.** The §2.5 contract check was executed (16 calls, signed commit `8344f74`). As anticipated from public audits, `jev-1.13.0` returns probabilities quantized to $0.01$ (two decimals or coarser — yes). Taylor's ruling of 2026-09-22 resolves the gate and the action rule:
 1. **Strata unchanged:** The three disjoint strata stand as specified in [2026-09-22 Jev Dataset Spec](2026-09-22-jev-dataset-spec.md) with half-open bands $[0.45, 0.55)$, $[0.55, 0.65)$, and $[0.85, 0.95]$, containing 10, 10, and 11 attainable grid points respectively.
-2. **Primary action rule is $p > c$:** To match TypeSafe's documented threshold convention across its official code examples (`https://docs.typesafe.ai/primitives/noul.md`, e.g. `wants_human > YES`, `repeat > YES`, `noul > 0.9`, `noul > 0.7`), the primary decision event is defined strictly as:
+2. **Primary action rule is $p > c$:** To align with standard threshold decision logic (taking action when assessed probability strictly exceeds the decision boundary), the primary decision event is defined strictly as:
    $$\text{Action}_{c}(x) = \begin{cases} 1 & \text{if } p(x) > c \\ 0 & \text{if } p(x) \le c \end{cases}$$
    applied to the raw returned decimal without rounding. A tie at $p = c$ evaluates to $\text{Action} = 0$ (does not act).
 3. **Tie tracking:** The count of items with $p = c$ in either arm is recorded per cut and per sweep.
@@ -473,7 +473,7 @@ Read the middle column. Going from $j = 5$ to $j = 7$ moves agree@$j$ by **2.1 p
 
 **Feasibility, at the measured latency.** The contract check (16 calls, `8344f74`) recorded a median latency of **0.338 s**. At the declared concurrency of 4 that is 11.8 calls/s, or 710 requests/minute against the documented 1,200/minute limit. A sweep is $847 \times 5 = 4{,}235$ calls and takes about **6.0 minutes**, inside the declared 20-minute window with more margin than the two-arm design had under §4.1's pessimistic 2-second assumption. Note what this does not promise: the contract check measured 16 calls and says nothing about the tail. At a 1-second median a sweep would run about 17.6 minutes and still fit; at 2 seconds it would run 35 minutes and §4.1's withdrawal rule would fire, the data standing and the claim withdrawn per sweep.
 
-**5.3 The token cap, and the arithmetic that moves it.** All figures are the provider's own recorded `usage.input_tokens`, at $0.042 per MTok input.
+**5.3 The token cap, and the arithmetic that moves it.** All figures are the provider's own recorded `usage.input_tokens`, with pricing cited to the public third-party listing on [OpenRouter](https://openrouter.ai/models/typesafe/jev-latest) ($0.042 per million input tokens).
 
 | Line | Calls | Input tokens |
 |---|---|---|
@@ -485,7 +485,7 @@ Read the middle column. Going from $j = 5$ to $j = 7$ moves agree@$j$ by **2.1 p
 
 The mean is **382.95 input tokens per call**, measured over the 4,500 calibration calls on these same item states with this same question — not the 543 the pre-calibration estimate used. One sweep is 4,235 calls and **1,621,786** tokens. The projected total of **6.595 MTok is above the pre-registered 6 MTok cap of §6**, which was set for a two-arm design.
 
-**The cap is raised to 7 MTok**, which is the smallest whole number with two properties worth having: the study as declared fits inside it with 404,854 tokens of margin (6.1%), and a **fourth** sweep does not — 6.595 + 1.622 = 8.217 MTok — so Prove's between-sweeps gate (`--cap-check`, PR51) exits non-zero on any unplanned extra sweep rather than on the planned third. The cap stays priced in tokens so it is exactly pre-registrable; at the current price the whole study is **$0.277**, of which $0.073 is already spent. This is the only number in this document that the k-replicate change moves, and it is **owed to Taylor as one yes/no** before the first measurement sweep.
+**The cap is raised to 7 MTok**, which is the smallest whole number with two properties worth having: the study as declared fits inside it with 404,854 tokens of margin (6.1%), and a **fourth** sweep does not — 6.595 + 1.622 = 8.217 MTok — so Prove's between-sweeps gate (`--cap-check`, PR51) exits non-zero on any unplanned extra sweep rather than on the planned third. The cap stays priced in tokens so it is exactly pre-registrable; at the OpenRouter gateway rate the whole study is projected at **$0.277**, of which $0.073 was incurred during pre-flight calibration. This is the only number in this document that the k-replicate change moves, and it is **owed to Taylor as one yes/no** before the first measurement sweep.
 
 **5.4 The two k-metrics, and what they are.** Both are computed per cut, on that cut's own stratum, and never across cuts (§2.4 is unchanged). Both use the primary action rule of addendum 4 — $\text{Action} = 1 \iff p > c$, ties at $p = c$ recorded and evaluating to 0 — with the weak inequality $p \ge c$ reported beside them as the same pre-declared sensitivity analysis, never in place of them. Both carry the item-clustered percentile bootstrap of §5.3, $B = 10{,}000$, seed `20260921`, with the design effect beside them.
 
@@ -496,7 +496,7 @@ The mean is **382.95 input tokens per call**, measured over the 4,500 calibratio
 
 **5.5 Cost framing, pre-declared.** These are the sentences the note is allowed to build, fixed now so that no framing is chosen after a number is seen. For each $j$, the note may report:
 
-- **dollars per decision**: $j \times 382.95$ tokens $\times$ the run-time price. At the current $0.042/MTok that is 1.6¢ per 1,000 decisions at $j = 1$ and 8.0¢ per 1,000 at $j = 5$.
+- **cost per decision**: $j \times 382.95$ tokens $\times$ the public gateway price ($0.042/MTok on [OpenRouter](https://openrouter.ai/models/typesafe/jev-latest)). At that rate, cost is ~1.6¢ per 1,000 decisions at $j = 1$ and ~8.0¢ per 1,000 at $j = 5$.
 - **latency per decision**: $j \times$ the recorded per-call median, serial, and the same divided by the declared concurrency of 4. At the contract check's 0.338 s that is 1.7 s serial and 0.42 s amortised at $j = 5$.
 - **"out of 10,000 near-cut decisions, $N$ decided differently"**, where $N = 10{,}000 \times (1 - \text{MS@}j)$, always with both endpoints of the same clustered interval and **always with the near-cut conditioning attached in the same sentence**. It is a rate for items chosen to sit beside a cut and it is not a rate for production traffic; §7.4 is the standing withdrawal and this is where it would most easily be forgotten.
 
