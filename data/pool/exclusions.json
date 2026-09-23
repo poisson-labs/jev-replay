@@ -1,0 +1,108 @@
+{
+  "raw_counts": {
+    "S1": 13083,
+    "S2": 23850,
+    "S3": 21362
+  },
+  "missing_field": {
+    "S1": 0,
+    "S2": 0,
+    "S3": 0
+  },
+  "helpfulness_0_dropped": {
+    "S1": 0,
+    "S2": 0,
+    "S3": 1694
+  },
+  "language_excluded": {
+    "S1": 2211,
+    "S2": 8394,
+    "S3": 58
+  },
+  "length_under_20": {
+    "S1": 10,
+    "S2": 255,
+    "S3": 0
+  },
+  "length_over_1500": {
+    "S1": 0,
+    "S2": 0,
+    "S3": 13226
+  },
+  "pii_removals": {
+    "base64_run": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 12
+    },
+    "email": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 6
+    },
+    "handle": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 21
+    },
+    "phone": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 25
+    },
+    "ssn": {
+      "S1": 0,
+      "S2": 0,
+      "S3": 1
+    },
+    "street_address": {
+      "S1": 1,
+      "S2": 7,
+      "S3": 42
+    }
+  },
+  "pii_totals": {
+    "S1": 1,
+    "S2": 7,
+    "S3": 107
+  },
+  "exact_dedup_dropped": {
+    "S1": 11,
+    "S2": 4,
+    "S3": 6
+  },
+  "near_dedup": {
+    "clusters_count": 93,
+    "largest_cluster_size": 4,
+    "dropped_by_source": {
+      "S1": 26,
+      "S2": 40,
+      "S3": 36
+    },
+    "total_dropped": 102
+  },
+  "final_eligible_count": 32209,
+  "arithmetic_reconciliation": {
+    "S1": {
+      "raw": 13083,
+      "excluded_pre_dedup": 2222,
+      "exact_dedup_dropped": 11,
+      "near_dedup_dropped": 26,
+      "eligible": 10824
+    },
+    "S2": {
+      "raw": 23850,
+      "excluded_pre_dedup": 8656,
+      "exact_dedup_dropped": 4,
+      "near_dedup_dropped": 40,
+      "eligible": 15150
+    },
+    "S3": {
+      "raw": 21362,
+      "excluded_pre_dedup": 15085,
+      "exact_dedup_dropped": 6,
+      "near_dedup_dropped": 36,
+      "eligible": 6235
+    }
+  }
+}

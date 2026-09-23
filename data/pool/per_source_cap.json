@@ -1,0 +1,10 @@
+{
+  "per_stratum_cap_per_source": 120,
+  "stratum_target": 300,
+  "total_sources": 3,
+  "sources": [
+    "S1",
+    "S2",
+    "S3"
+  ]
+}

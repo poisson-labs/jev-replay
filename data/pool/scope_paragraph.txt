@@ -1,0 +1,1 @@
+This assistant handles: banking, credit cards, kitchen and dining, home, auto and commute, travel, utility, work, small talk, and meta requests about the assistant itself.
