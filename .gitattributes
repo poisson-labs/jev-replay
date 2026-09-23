@@ -1,0 +1,3 @@
+# Exclude generated report markup from GitHub language statistics and diffs
+report/*.html linguist-detectable=false linguist-generated=true
+report/*.svg linguist-detectable=false linguist-generated=true
