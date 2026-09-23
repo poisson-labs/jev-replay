@@ -1,0 +1,40 @@
+[project]
+name = "jev-replay"
+version = "0.1.0"
+description = "Replication and independent verification suite for the Jev paired-replay reliability study."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Taylor Kolasinski", email = "work@poissonlabs.ai" },
+]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0.0",
+    "pyarrow>=17.0.0",
+    "scipy>=1.14.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/poisson-labs/jev-replay"
+Repository = "https://github.com/poisson-labs/jev-replay"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["scratch", "data"]
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "RUF", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "lf"
