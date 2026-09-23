@@ -1,0 +1,90 @@
+Jev Paired-Replay Study (jev-replay)
+Copyright (c) 2026 Taylor Kolasinski / Poisson Labs
+
+This product includes software and data from third parties, listed below.
+jev-replay itself is distributed under the MIT license; see LICENSE.
+
+Poisson Prove is pre-release and in testing, not yet public.
+The command-line interface proofload may be referenced in execution commands only.
+
+TypeSafe and Jev are trademarks of TypeSafe AI. This repository documents an
+independent empirical study evaluating model output repeatability across replicated
+calls. It is not affiliated with, sponsored by, or endorsed by TypeSafe AI.
+No security testing, adversarial attack, red-teaming, or internal reverse-engineering
+is performed or claimed.
+
+================================================================================
+Benchmark Datasets
+================================================================================
+
+--------------------------------------------------------------------------------
+1. Banking77 (PolyAI/banking77)
+Repository: https://huggingface.co/datasets/PolyAI/banking77
+Pinned revision: 90d4e2ee5521c04fc1488f065b8b083658768c57
+Licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
+Citation:
+  Iñigo Casanueva, Tadas Temčinas, Daniela Gerz, Matthew Henderson, and Ivan Vulić.
+  "Efficient Intent Detection with Dual Sentence Encoders." arXiv:2003.04807 (2020).
+
+Licence terms:
+  Attribution 4.0 International (CC BY 4.0)
+  https://creativecommons.org/licenses/by/4.0/legalcode
+  You are free to share and adapt the material for any purpose, even commercially,
+  provided you give appropriate credit, provide a link to the license, and indicate
+  if changes were made.
+
+--------------------------------------------------------------------------------
+2. CLINC150 (clinc/clinc_oos)
+Repository: https://huggingface.co/datasets/clinc/clinc_oos
+Pinned revision: 155b9c710419136e17307b80d0a13e68cd46b4ec
+Licence: Creative Commons Attribution 3.0 Unported (CC BY 3.0)
+Citation:
+  Stefan Larson, Anish Mahendran, Joseph J. Peper, Christopher Clarke,
+  Andrew Lee, Parker Hill, Jonathan K. Kummerfeld, Kevin Leach, Michael A.
+  Laurenzano, Lingjia Tang, and Jason Mars. "An Evaluation Dataset for
+  Intent Classification and Out-of-Scope Prediction." EMNLP-IJCNLP (2019).
+
+Licence terms:
+  Attribution 3.0 Unported (CC BY 3.0)
+  https://creativecommons.org/licenses/by/3.0/legalcode
+  You are free to share and adapt the material for any purpose, provided you
+  give appropriate credit and provide a link to the license.
+
+--------------------------------------------------------------------------------
+3. HelpSteer2 (nvidia/HelpSteer2)
+Repository: https://huggingface.co/datasets/nvidia/HelpSteer2
+Pinned revision: 990b2711a36180dd19d9c94b8627844866f8982a
+Licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
+Citation:
+  Zhilin Wang, Yi Dong, Olivier Delalleau, Jiaqi Zeng, Gerald Shen, Daniel
+  Egert, Jimmy J. Zhang, Mostofa Patwary, and Mohammad Shoeybi.
+  "HelpSteer2: Open-source dataset for training top-performing reward models."
+  arXiv:2406.08673 (2024).
+
+Licence terms:
+  Attribution 4.0 International (CC BY 4.0)
+  https://creativecommons.org/licenses/by/4.0/legalcode
+  You are free to share and adapt the material for any purpose, provided you
+  give appropriate credit and provide a link to the license.
+
+================================================================================
+Third-Party Software Dependencies
+================================================================================
+
+--------------------------------------------------------------------------------
+1. NumPy
+Repository: https://github.com/numpy/numpy
+Licence: BSD 3-Clause License
+Copyright (c) 2005-2024, NumPy Developers. All rights reserved.
+
+--------------------------------------------------------------------------------
+2. SciPy
+Repository: https://github.com/scipy/scipy
+Licence: BSD 3-Clause License
+Copyright (c) 2001-2002 Enthought, Inc. 2003-2024, SciPy Developers. All rights reserved.
+
+--------------------------------------------------------------------------------
+3. Apache Arrow / PyArrow
+Repository: https://github.com/apache/arrow
+Licence: Apache License, Version 2.0
+Copyright 2016-2024 The Apache Software Foundation.
