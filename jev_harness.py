@@ -67,17 +67,14 @@ def execute_call(
     )
 
     t_start_ns = time.time_ns()
-    http_status = None
     error_msg = None
     raw_resp = b""
 
     # Retries are strictly zero (§4.4)
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
-            http_status = resp.status
             raw_resp = resp.read()
     except urllib.error.HTTPError as e:
-        http_status = e.code
         raw_resp = e.read()
         error_msg = f"HTTP {e.code}: {e.reason}"
     except Exception as e:
@@ -243,7 +240,9 @@ def run_sweep(
     concurrency: int = CONCURRENCY,
 ) -> dict[str, Any]:
     """Execute all five arms of a sweep sequentially, each arm using concurrency."""
-    print(f"\n{'='*70}\nStarting Sweep {sweep_name} (salt: {salt}, k=5, items={len(corpus)})\n{'='*70}")
+    print(
+        f"\n{'=' * 70}\nStarting Sweep {sweep_name} (salt: {salt}, k=5, items={len(corpus)})\n{'=' * 70}"
+    )
     sweep_t0 = time.perf_counter()
     arm_stats = {}
     sweep_first_ns = None
@@ -272,7 +271,9 @@ def run_sweep(
             "errors": n_errors,
             "elapsed_s": round((end_ns - start_ns) / 1e9, 2),
         }
-        print(f"  <-- Arm {run_id} finished: {n_items} items, {n_errors} errors in {arm_stats[label]['elapsed_s']}s")
+        print(
+            f"  <-- Arm {run_id} finished: {n_items} items, {n_errors} errors in {arm_stats[label]['elapsed_s']}s"
+        )
 
     sweep_elapsed_s = time.perf_counter() - sweep_t0
     sweep_span_s = round((sweep_last_ns - sweep_first_ns) / 1e9, 2)
@@ -288,7 +289,9 @@ def run_sweep(
         "wall_elapsed_s": round(sweep_elapsed_s, 2),
         "window_claim": "held" if held else "withdrawn",
     }
-    print(f"Sweep {sweep_name} complete in {sweep_span_s}s span ({summary['window_claim']}). Total calls: {summary['total_calls']}, errors: {summary['total_errors']}\n")
+    print(
+        f"Sweep {sweep_name} complete in {sweep_span_s}s span ({summary['window_claim']}). Total calls: {summary['total_calls']}, errors: {summary['total_errors']}\n"
+    )
     return summary
 
 

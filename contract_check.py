@@ -11,19 +11,24 @@ Runs 10 to 25 calls to POST https://api.typesafe.ai/v1/systemone using jev-1.13.
 - NEVER prints, logs, or stores TYPESAFE_API_KEY
 """
 
-import os
-import sys
-import json
-import time
-import hashlib
-import urllib.request
-import urllib.error
 import base64
+import hashlib
+import json
+import os
 import re
+import sys
+import time
+import urllib.error
+import urllib.request
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-POOL_DIR = os.path.join(SCRIPT_DIR, "data", "pool") if os.path.exists(os.path.join(SCRIPT_DIR, "data", "pool")) else os.path.join(SCRIPT_DIR, "pool")
+POOL_DIR = (
+    os.path.join(SCRIPT_DIR, "data", "pool")
+    if os.path.exists(os.path.join(SCRIPT_DIR, "data", "pool"))
+    else os.path.join(SCRIPT_DIR, "pool")
+)
 URL = "https://api.typesafe.ai/v1/systemone"
+
 
 def run_contract_check():
     api_key = os.environ.get("TYPESAFE_API_KEY")
@@ -31,7 +36,7 @@ def run_contract_check():
         sys.exit("BLOCKED: TYPESAFE_API_KEY is not set in the process environment.")
 
     candidates_path = os.path.join(POOL_DIR, "eligible_candidates.json")
-    with open(candidates_path, "r", encoding="utf-8") as f:
+    with open(candidates_path, encoding="utf-8") as f:
         candidates = json.load(f)
 
     # Pick 4 items from S1, 4 from S2, 4 from S3
@@ -73,11 +78,8 @@ def run_contract_check():
         req = urllib.request.Request(
             URL,
             data=req_bytes,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            },
-            method="POST"
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            method="POST",
         )
 
         t0 = time.perf_counter()
@@ -140,16 +142,21 @@ def run_contract_check():
             "p_raw": p_raw,
             "p_val": p_val,
             "response_sha256": resp_hash,
-            "raw_response_bytes_b64": base64.b64encode(raw_resp).decode("ascii") if raw_resp else None
+            "raw_response_bytes_b64": base64.b64encode(raw_resp).decode("ascii")
+            if raw_resp
+            else None,
         }
         results.append(record)
-        print(f"  [{idx+1:2d}/{len(call_plan)}] {label:24s} -> status={http_status} p={p_raw} latency={latency:.3f}s in_tok={in_tok}")
+        print(
+            f"  [{idx + 1:2d}/{len(call_plan)}] {label:24s} -> status={http_status} p={p_raw} latency={latency:.3f}s in_tok={in_tok}"
+        )
 
     out_file = os.path.join(SCRIPT_DIR, "contract_check_results.json")
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
 
     print(f"\nResults saved to: {out_file}")
+
 
 if __name__ == "__main__":
     run_contract_check()

@@ -18,22 +18,26 @@ Constraints:
 - NEVER prints, logs, or stores TYPESAFE_API_KEY
 """
 
-import os
-import sys
-import json
-import time
-import hashlib
-import urllib.request
-import urllib.error
 import base64
-import re
-from decimal import Decimal
-from datetime import datetime, timezone
 import concurrent.futures
+import hashlib
+import json
+import os
+import re
+import sys
 import threading
+import time
+import urllib.error
+import urllib.request
+from datetime import UTC, datetime
+from decimal import Decimal
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-POOL_DIR = os.path.join(SCRIPT_DIR, "data", "pool") if os.path.exists(os.path.join(SCRIPT_DIR, "data", "pool")) else os.path.join(SCRIPT_DIR, "pool")
+POOL_DIR = (
+    os.path.join(SCRIPT_DIR, "data", "pool")
+    if os.path.exists(os.path.join(SCRIPT_DIR, "data", "pool"))
+    else os.path.join(SCRIPT_DIR, "pool")
+)
 URL = "https://api.typesafe.ai/v1/systemone"
 
 PRICE_PER_MTOK_IN = 0.042
@@ -47,6 +51,7 @@ STRATA_CONFIG = {
     "0.90": {"low": Decimal("0.85"), "high": Decimal("0.95"), "closed_right": True},
 }
 
+
 def determine_band(p_dec):
     if p_dec is None:
         return None
@@ -59,6 +64,7 @@ def determine_band(p_dec):
                 return stratum
     return None
 
+
 def execute_call(item, api_key):
     req_bytes = base64.b64decode(item["canonical_b64"])
     req_hash = hashlib.sha256(req_bytes).hexdigest()
@@ -67,11 +73,8 @@ def execute_call(item, api_key):
     req = urllib.request.Request(
         URL,
         data=req_bytes,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        },
-        method="POST"
+        headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+        method="POST",
     )
 
     t0 = time.perf_counter()
@@ -92,7 +95,7 @@ def execute_call(item, api_key):
         error_msg = str(e)
 
     dt = time.perf_counter() - t0
-    resp_time_iso = datetime.now(timezone.utc).isoformat()
+    resp_time_iso = datetime.now(UTC).isoformat()
     resp_hash = hashlib.sha256(raw_resp).hexdigest() if raw_resp else None
 
     p_raw = None
@@ -132,8 +135,9 @@ def execute_call(item, api_key):
         "p_raw": p_raw,
         "p_dec": p_dec,
         "response_sha256": resp_hash,
-        "raw_response_bytes_b64": base64.b64encode(raw_resp).decode("ascii") if raw_resp else None
+        "raw_response_bytes_b64": base64.b64encode(raw_resp).decode("ascii") if raw_resp else None,
     }
+
 
 def run_calibration():
     api_key = os.environ.get("TYPESAFE_API_KEY")
@@ -141,18 +145,20 @@ def run_calibration():
         sys.exit("BLOCKED: TYPESAFE_API_KEY is not set in environment.")
 
     candidates_path = os.path.join(POOL_DIR, "eligible_candidates.json")
-    with open(candidates_path, "r", encoding="utf-8") as f:
+    with open(candidates_path, encoding="utf-8") as f:
         candidates = json.load(f)
 
     # Verify pool integrity
     digests_path = os.path.join(POOL_DIR, "DIGESTS.txt")
-    with open(digests_path, "r", encoding="utf-8") as f:
+    with open(digests_path, encoding="utf-8") as f:
         for line in f:
             if "eligible_candidates.json" in line:
                 expected_hash = line.strip().split()[0]
                 with open(candidates_path, "rb") as cf:
                     actual_hash = hashlib.sha256(cf.read()).hexdigest()
-                assert actual_hash == expected_hash, f"Integrity check failed: {actual_hash} != {expected_hash}"
+                assert actual_hash == expected_hash, (
+                    f"Integrity check failed: {actual_hash} != {expected_hash}"
+                )
 
     print(f"Loaded {len(candidates)} candidates from frozen pool.")
 
@@ -161,7 +167,9 @@ def run_calibration():
     range2_items = [c for c in candidates if c.get("range") == 2]
     range3_items = [c for c in candidates if c.get("range") == 3]
 
-    print(f"Declared ranges: Range 1 = {len(range1_items)}, Range 2 = {len(range2_items)}, Range 3 = {len(range3_items)}")
+    print(
+        f"Declared ranges: Range 1 = {len(range1_items)}, Range 2 = {len(range2_items)}, Range 3 = {len(range3_items)}"
+    )
 
     stratum_counts = {"0.50": 0, "0.60": 0, "0.90": 0}
     source_counts = {
@@ -187,7 +195,9 @@ def run_calibration():
 
         print()
         print("=" * 60)
-        print(f"Executing Range {range_num} ({len(range_items)} candidates, concurrency={CONCURRENCY})...")
+        print(
+            f"Executing Range {range_num} ({len(range_items)} candidates, concurrency={CONCURRENCY})..."
+        )
         print("=" * 60)
 
         range_results = [None] * len(range_items)
@@ -204,15 +214,19 @@ def run_calibration():
                 if completed_count % 100 == 0 or completed_count == len(range_items):
                     elapsed = time.perf_counter() - t_start
                     rps = completed_count / elapsed if elapsed > 0 else 0
-                    print(f"  [Range {range_num}] {completed_count:4d}/{len(range_items)} calls completed ({rps:.1f} req/s, {elapsed:.1f}s elapsed)")
+                    print(
+                        f"  [Range {range_num}] {completed_count:4d}/{len(range_items)} calls completed ({rps:.1f} req/s, {elapsed:.1f}s elapsed)"
+                    )
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=CONCURRENCY) as executor:
             futures = [executor.submit(worker, i, item) for i, item in enumerate(range_items)]
             concurrent.futures.wait(futures)
 
-        print(f"Range {range_num} finished in {time.perf_counter() - t_start:.2f}s. Placing items in global hash order...")
+        print(
+            f"Range {range_num} finished in {time.perf_counter() - t_start:.2f}s. Placing items in global hash order..."
+        )
 
-        for idx, res in enumerate(range_results):
+        for _idx, res in enumerate(range_results):
             total_calls_made += 1
             in_tok = res["input_tokens"]
             out_tok = res["output_tokens"]
@@ -256,7 +270,7 @@ def run_calibration():
                         "p_cal": float(p_dec),
                         "canonical_b64": res["item"]["canonical_b64"],
                         "state": res["item"]["state"],
-                        "question_instructions": res["item"]["question_instructions"]
+                        "question_instructions": res["item"]["question_instructions"],
                     }
                     corpus_items.append(corpus_entry)
 
@@ -278,7 +292,7 @@ def run_calibration():
                 "stratum_assigned": stratum_assigned,
                 "fill_index": fill_idx,
                 "response_sha256": res["response_sha256"],
-                "raw_response_bytes_b64": res["raw_response_bytes_b64"]
+                "raw_response_bytes_b64": res["raw_response_bytes_b64"],
             }
             manifest_records.append(manifest_record)
 
@@ -288,15 +302,21 @@ def run_calibration():
                 return True
 
             if total_input_tokens >= CALIBRATION_IN_TOK_LIMIT:
-                print(f"STOP: Token ceiling reached ({total_input_tokens} >= {CALIBRATION_IN_TOK_LIMIT})!")
+                print(
+                    f"STOP: Token ceiling reached ({total_input_tokens} >= {CALIBRATION_IN_TOK_LIMIT})!"
+                )
                 return True
 
         spend = total_input_tokens * (PRICE_PER_MTOK_IN / 1_000_000)
         print()
         print(f"Status after Range {range_num}:")
-        print(f"  Calls: {total_calls_made}, Input Tokens: {total_input_tokens:,}, Spend: ${spend:.5f}")
+        print(
+            f"  Calls: {total_calls_made}, Input Tokens: {total_input_tokens:,}, Spend: ${spend:.5f}"
+        )
         for s in ["0.50", "0.60", "0.90"]:
-            print(f"  Stratum {s:4s}: {stratum_counts[s]:3d}/300 (S1: {source_counts[s]['S1']}, S2: {source_counts[s]['S2']}, S3: {source_counts[s]['S3']}, ties: {ties_at_cut[s]})")
+            print(
+                f"  Stratum {s:4s}: {stratum_counts[s]:3d}/300 (S1: {source_counts[s]['S1']}, S2: {source_counts[s]['S2']}, S3: {source_counts[s]['S3']}, ties: {ties_at_cut[s]})"
+            )
 
         return is_all_strata_full()
 
@@ -334,7 +354,11 @@ def run_calibration():
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     print(f"Saved manifest: {manifest_path} ({len(manifest_records)} records)")
 
-    corpus_fname = "corpus_jev_900.json" if len(corpus_items) == 900 else f"corpus_jev_realized_{len(corpus_items)}.json"
+    corpus_fname = (
+        "corpus_jev_900.json"
+        if len(corpus_items) == 900
+        else f"corpus_jev_realized_{len(corpus_items)}.json"
+    )
     corpus_path = os.path.join(SCRIPT_DIR, corpus_fname)
     with open(corpus_path, "w", encoding="utf-8") as f:
         json.dump(corpus_items, f, indent=2, ensure_ascii=False)
@@ -356,12 +380,15 @@ def run_calibration():
         "corpus_file": corpus_fname,
         "corpus_sha256": corpus_hash,
         "corpus_count": len(corpus_items),
-        "under_fill": {s: 300 - stratum_counts[s] for s in ["0.50", "0.60", "0.90"] if stratum_counts[s] < 300}
+        "under_fill": {
+            s: 300 - stratum_counts[s] for s in ["0.50", "0.60", "0.90"] if stratum_counts[s] < 300
+        },
     }
     summary_path = os.path.join(SCRIPT_DIR, "calibration_summary.json")
     with open(summary_path, "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
     print(f"Saved summary: {summary_path}")
+
 
 if __name__ == "__main__":
     run_calibration()

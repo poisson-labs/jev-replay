@@ -34,9 +34,7 @@ PAIR_ARMS = ("a", "b")
 CUT_NAMES = ("0.50", "0.60", "0.90")
 THRESHOLDS = {name: Decimal(name) for name in CUT_NAMES}
 
-RUNS = {
-    sweep: {arm: f"{sweep}-{arm}" for arm in ARM_LABELS} for sweep in SWEEPS
-}
+RUNS = {sweep: {arm: f"{sweep}-{arm}" for arm in ARM_LABELS} for sweep in SWEEPS}
 
 COUNT_TOL = 0  # exact
 INTERVAL_TOL = Fraction(1, 10**12)  # stated: exact counts; intervals to 1e-12
@@ -188,7 +186,9 @@ def icc_oneway(clusters: list[list[float]]) -> tuple[float, float, float]:
     return rho, m_bar, deff
 
 
-def cluster_bootstrap(clusters: list[list[float]], b: int = B, seed: int = SEED) -> tuple[float, float, float]:
+def cluster_bootstrap(
+    clusters: list[list[float]], b: int = B, seed: int = SEED
+) -> tuple[float, float, float]:
     """Percentile cluster bootstrap: resample items, concat observations, mean."""
     ordered = [np.asarray(c, dtype=float) for c in clusters]
     G = len(ordered)
@@ -210,7 +210,7 @@ def majority(bits: list[int]) -> int:
 def build_cells(store: dict) -> dict:
     """cells[cut][item][sweep] = {arm: rec}."""
     cells = {cut: defaultdict(dict) for cut in CUT_NAMES}
-    for (run_id, item), rec in store["rows"].items():
+    for (_run_id, item), rec in store["rows"].items():
         cells[rec["cut"]].setdefault(item, {})
         cells[rec["cut"]][item][rec["sweep"]] = cells[rec["cut"]][item].get(rec["sweep"], {})
         cells[rec["cut"]][item][rec["sweep"]][rec["arm"]] = rec
@@ -237,7 +237,9 @@ def analyse_cut(cut: str, items: dict, rule: str, pair_follows_k: bool = False) 
     c = THRESHOLDS[cut]
     # Pair analysis: a vs b whenever both returned, unless pair_follows_k
     # (Prove's behaviour: drop the item-sweep from the pair if any of five erred).
-    per_sweep = {s: {"n11": 0, "n10": 0, "n01": 0, "n00": 0, "ties_a": 0, "ties_b": 0} for s in SWEEPS}
+    per_sweep = {
+        s: {"n11": 0, "n10": 0, "n01": 0, "n00": 0, "ties_a": 0, "ties_b": 0} for s in SWEEPS
+    }
     flip_clusters = {}  # item -> list of 0/1
     swing_clusters = {}  # item -> list of -1/0/+1
     agree_clusters = {j: {} for j in range(2, 6)}
@@ -279,7 +281,7 @@ def analyse_cut(cut: str, items: dict, rule: str, pair_follows_k: bool = False) 
             if ke:
                 vals = [arms[a]["noul"] for a in ARM_LABELS]
                 acts = [action(p, c, rule) for p in vals]
-                for arm, p in zip(ARM_LABELS, vals):
+                for arm, p in zip(ARM_LABELS, vals, strict=True):
                     if is_tie(p, c):
                         ties_arm[arm] += 1
                 for j in range(2, 6):
@@ -382,7 +384,9 @@ def analyse_cut(cut: str, items: dict, rule: str, pair_follows_k: bool = False) 
             "flip_rate": Fraction(d, n) if n else Fraction(0),
             "flip_lo": lo,
             "flip_hi": hi,
-            "net_swing": Fraction(per_sweep[s]["n01"] - per_sweep[s]["n10"], n) if n else Fraction(0),
+            "net_swing": Fraction(per_sweep[s]["n01"] - per_sweep[s]["n10"], n)
+            if n
+            else Fraction(0),
             "rate_a": rate_a,
             "rate_b": rate_b,
             "mcnemar": p_mc,
@@ -394,12 +398,24 @@ def analyse_cut(cut: str, items: dict, rule: str, pair_follows_k: bool = False) 
         ordered_items = sorted(agree_clusters[j])
         lists = [agree_clusters[j][i] for i in ordered_items]
         hat, lo, hi = cluster_bootstrap(lists)
-        k_out[f"agree@{j}"] = {"estimate": hat, "lo": lo, "hi": hi, "n_obs": sum(len(x) for x in lists), "n_items": len(lists)}
+        k_out[f"agree@{j}"] = {
+            "estimate": hat,
+            "lo": lo,
+            "hi": hi,
+            "n_obs": sum(len(x) for x in lists),
+            "n_items": len(lists),
+        }
     for j in (1, 3, 5):
         ordered_items = sorted(ms_clusters[j])
         lists = [ms_clusters[j][i] for i in ordered_items]
         hat, lo, hi = cluster_bootstrap(lists)
-        k_out[f"MS@{j}"] = {"estimate": hat, "lo": lo, "hi": hi, "n_obs": sum(len(x) for x in lists), "n_items": len(lists)}
+        k_out[f"MS@{j}"] = {
+            "estimate": hat,
+            "lo": lo,
+            "hi": hi,
+            "n_obs": sum(len(x) for x in lists),
+            "n_items": len(lists),
+        }
 
     return {
         "cut": cut,
@@ -460,7 +476,11 @@ def load_prove():
 
 
 def close(a, b, tol=INTERVAL_TOL) -> bool:
-    return abs(Fraction(str(a)) - Fraction(str(b))) <= tol if False else abs(float(a) - float(b)) <= float(tol)
+    return (
+        abs(Fraction(str(a)) - Fraction(str(b))) <= tol
+        if False
+        else abs(float(a) - float(b)) <= float(tol)
+    )
 
 
 def compare(results: dict, prove: dict) -> list[str]:
@@ -475,8 +495,8 @@ def compare(results: dict, prove: dict) -> list[str]:
         pi = iv[cut]
         pr = rep[cut]
 
-        def miss(msg):
-            mismatches.append(f"{cut} gt: {msg}")
+        def miss(msg, current_cut=cut):
+            mismatches.append(f"{current_cut} gt: {msg}")
 
         # per-sweep 2x2
         for s in SWEEPS:
@@ -487,28 +507,36 @@ def compare(results: dict, prove: dict) -> list[str]:
                 if o[k] != p[k]:
                     miss(f"{s} {k} ours={o[k]} prove={p[k]}")
             if abs(float(o["mcnemar"]) - float(p["arm_order_check"]["p"])) > 1e-9:
-                miss(f"{s} McNemar ours={float(o['mcnemar']):.12f} prove={p['arm_order_check']['p']}")
+                miss(
+                    f"{s} McNemar ours={float(o['mcnemar']):.12f} prove={p['arm_order_check']['p']}"
+                )
             if o["ties_a"] != p["ties"]["a"] or o["ties_b"] != p["ties"]["b"]:
-                miss(f"{s} ties ours=({o['ties_a']},{o['ties_b']}) prove=({p['ties']['a']},{p['ties']['b']})")
+                miss(
+                    f"{s} ties ours=({o['ties_a']},{o['ties_b']}) prove=({p['ties']['a']},{p['ties']['b']})"
+                )
             if abs(float(o["rate_a"]) - pi_s["rate_a"]) > 1e-12:
                 miss(f"{s} rate_a ours={float(o['rate_a'])} prove={pi_s['rate_a']}")
             if abs(float(o["rate_b"]) - pi_s["rate_b"]) > 1e-12:
                 miss(f"{s} rate_b ours={float(o['rate_b'])} prove={pi_s['rate_b']}")
             if abs(float(o["flip_rate"]) - pi_s["flip_rate"]["estimate"]) > 1e-12:
-                miss(f"{s} flip_rate ours={float(o['flip_rate'])} prove={pi_s['flip_rate']['estimate']}")
+                miss(
+                    f"{s} flip_rate ours={float(o['flip_rate'])} prove={pi_s['flip_rate']['estimate']}"
+                )
             if abs(o["flip_lo"] - pi_s["flip_rate"]["lo"]) > 1e-12:
                 miss(f"{s} flip_lo ours={o['flip_lo']} prove={pi_s['flip_rate']['lo']}")
             if abs(o["flip_hi"] - pi_s["flip_rate"]["hi"]) > 1e-12:
                 miss(f"{s} flip_hi ours={o['flip_hi']} prove={pi_s['flip_rate']['hi']}")
             if abs(float(o["net_swing"]) - pi_s["net_swing"]["estimate"]) > 1e-12:
-                miss(f"{s} net_swing ours={float(o['net_swing'])} prove={pi_s['net_swing']['estimate']}")
+                miss(
+                    f"{s} net_swing ours={float(o['net_swing'])} prove={pi_s['net_swing']['estimate']}"
+                )
 
         if ours["ties_pair"]["a"] != pc["ties"]["a"] or ours["ties_pair"]["b"] != pc["ties"]["b"]:
             miss(f"pooled ties ours={ours['ties_pair']} prove={pc['ties']}")
 
-        if ours["n_pairs"] != (pi["n"]["items"] * pi["n"]["sweeps"] - (1 if cut == "0.60" else 0)) and ours["n_pairs"] != sum(
-            pc["per_sweep"][s]["n"] for s in SWEEPS
-        ):
+        if ours["n_pairs"] != (
+            pi["n"]["items"] * pi["n"]["sweeps"] - (1 if cut == "0.60" else 0)
+        ) and ours["n_pairs"] != sum(pc["per_sweep"][s]["n"] for s in SWEEPS):
             prove_n = sum(pc["per_sweep"][s]["n"] for s in SWEEPS)
             if ours["n_pairs"] != prove_n:
                 miss(f"n_pairs ours={ours['n_pairs']} prove={prove_n}")
@@ -574,9 +602,9 @@ def strata_check(cells: dict, store: dict, prove: dict) -> dict:
     config_hashes = {cut: set() for cut in CUT_NAMES}
     row_ids = {cut: set() for cut in CUT_NAMES}
     for cut in CUT_NAMES:
-        for item, sweeps in cells[cut].items():
-            for sweep, arms in sweeps.items():
-                for arm, rec in arms.items():
+        for _item, sweeps in cells[cut].items():
+            for _sweep, arms in sweeps.items():
+                for _arm, rec in arms.items():
                     config_hashes[cut].add(rec["config_hash"])
                     row_ids[cut].add((rec["run_id"], rec["config_hash"], rec["replicate_index"]))
                     req = store["request_by_run_item"].get((rec["run_id"], rec["item"]))
@@ -664,10 +692,12 @@ def main() -> int:
     w("== 782 at cut 0.60 ==")
     excl = results["0.60"]["gt"]["k_excluded"]
     kept = results["0.60"]["gt"]["pair_kept_despite_k_exclusion"]
-    w(f"261 × 3 = 783 item-sweeps in the 0.60 stratum")
+    w("261 × 3 = 783 item-sweeps in the 0.60 stratum")
     w(f"k-metric exclusions (addendum 5.7, all five or none): {len(excl)}")
     for e in excl:
-        w(f"  sweep={e['sweep']} item={e['item']} arm={e['arm']} detail={e['detail']!r} pair_ok={e['pair_ok']}")
+        w(
+            f"  sweep={e['sweep']} item={e['item']} arm={e['arm']} detail={e['detail']!r} pair_ok={e['pair_ok']}"
+        )
     w("spec rule: addendum 5.7 excludes whole replicate sets only from the k-metrics")
     w("declared pair is arms a,b (addendum 5.2); §5.1–§5.4 pair stats use those two arms")
     w(f"Prove pair n by sweep: {prove_n['0.60']}")
@@ -687,11 +717,17 @@ def main() -> int:
     for cut in CUT_NAMES:
         r = results[cut]["gt"]
         w(f"-- cut {cut} --")
-        w(f"  items={r['n_items']} pairs={r['n_pairs']}  2x2 n11={r['n11']} n10={r['n10']} n01={r['n01']} n00={r['n00']}")
+        w(
+            f"  items={r['n_items']} pairs={r['n_pairs']}  2x2 n11={r['n11']} n10={r['n10']} n01={r['n01']} n00={r['n00']}"
+        )
         w(f"  flips={r['flips']}  flip_rate {fnum(r['flip_rate'])}")
-        w(f"  flip interval {r['flip_lo']:.12f} {r['flip_hi']:.12f}  ({pct4(r['flip_lo'])} to {pct4(r['flip_hi'])})")
+        w(
+            f"  flip interval {r['flip_lo']:.12f} {r['flip_hi']:.12f}  ({pct4(r['flip_lo'])} to {pct4(r['flip_hi'])})"
+        )
         w(f"  net_swing {fnum(r['net_swing'])}  [{r['swing_lo']:.12f}, {r['swing_hi']:.12f}]")
-        w(f"  outcome {r['outcome']}  icc={r['icc']:.12f} m_bar={r['m_bar']:.12f} deff={r['deff']:.12f}")
+        w(
+            f"  outcome {r['outcome']}  icc={r['icc']:.12f} m_bar={r['m_bar']:.12f} deff={r['deff']:.12f}"
+        )
         w(f"  ties p=c  a={r['ties_pair']['a']} b={r['ties_pair']['b']}")
         for s in SWEEPS:
             o = r["per_sweep"][s]
@@ -725,7 +761,9 @@ def main() -> int:
 
     w("== 0.50 vs 0.60 independence ==")
     w(f"  items n {strata['n_items']}")
-    w(f"  item overlap 0.50∩0.60: {len(strata['item_overlap_50_60'])} {strata['item_overlap_50_60'][:3]}")
+    w(
+        f"  item overlap 0.50∩0.60: {len(strata['item_overlap_50_60'])} {strata['item_overlap_50_60'][:3]}"
+    )
     w(f"  item overlap 0.50∩0.90: {len(strata['item_overlap_50_90'])}")
     w(f"  item overlap 0.60∩0.90: {len(strata['item_overlap_60_90'])}")
     w(f"  request-body overlap 0.50∩0.60: {len(strata['request_overlap_50_60'])}")
@@ -733,7 +771,9 @@ def main() -> int:
     w(f"  stored-row overlap 0.50∩0.60: {len(strata['row_overlap_50_60'])}")
     w(f"  prove cluster overlap 0.50∩0.60: {len(strata['prove_item_overlap_50_60'])}")
     w(f"  prove request_digest overlap 0.50∩0.60: {len(strata['prove_request_overlap_50_60'])}")
-    w(f"  parquet files={strata['n_parquet_files']} unique hashes={strata['unique_parquet_hashes']} duplicate keys={strata['duplicate_keys']}")
+    w(
+        f"  parquet files={strata['n_parquet_files']} unique hashes={strata['unique_parquet_hashes']} duplicate keys={strata['duplicate_keys']}"
+    )
     mislabel = []
     for path, rids in strata["run_ids_by_file"].items():
         expect = Path(path).parts[-3]
