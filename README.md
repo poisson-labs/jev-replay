@@ -75,7 +75,7 @@ proofload paired jev_decl_study.toml --out report/
 ## What It Cost
 
 - **Total API calls:** 12,705 live calls (847 items $\times$ 5 arms $\times$ 3 sweeps).
-- **Recorded token consumption:** 4,875,417 input tokens (~4.88 MTok), well within the pre-registered 7.0 MTok ceiling. Output tokens are not billed by the provider for structured classification endpoints.
+- **Recorded token consumption:** 4,876,563 input tokens (~4.88 MTok), well within the pre-registered 7.0 MTok ceiling. Output tokens are not billed by the provider for structured classification endpoints.
 - **Third-party gateway pricing:** At the public rate of $0.042 per million input tokens listed on [OpenRouter](https://openrouter.ai/models/typesafe/jev-latest), the realized measurement cost was $0.2048 (with ~$0.0726 across pre-flight calibration).
 
 ## Repository Contents
