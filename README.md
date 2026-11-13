@@ -57,7 +57,7 @@ pip install poisson-prove
 poisson-prove paired --declaration jev_decl_study.toml --store data/store --out paired/
 ```
 
-It writes the six files in `data/paired/`: the same counts, and intervals that agree to the
+It writes the same six files that are in `data/paired/`: the same counts, and intervals that agree to the
 last few floating-point digits (checked with `poisson-prove` 0.2.2). A walk-through is at
 [poissonlabs.ai/docs/examples/check-whether-the-same-request-gets-the-same-decision/](https://poissonlabs.ai/docs/examples/check-whether-the-same-request-gets-the-same-decision/).
 
