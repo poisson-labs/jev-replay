@@ -2,7 +2,7 @@
 
 Replication artifacts and independent verification suite for the paired-replay reliability study of TypeSafe's Jev (`jev-1.13.0`).
 
-Published research note: [https://poissonlabs.ai/research/jev-paired-replay](https://poissonlabs.ai/research/jev-paired-replay)
+Published research note: [https://poissonlabs.ai/research/the-same-request-twice/](https://poissonlabs.ai/research/the-same-request-twice/)
 
 ## What the Study Asks
 
@@ -47,11 +47,28 @@ python3 recompute.py
 
 The script runs the $B = 10{,}000$ cluster bootstrap (seed `20260921`), validates cross-stratum independence, reproduces the 145 of 783 flips at 0.60, and confirms exact agreement with the paired JSON outputs in `data/paired/`.
 
-## How to Re-Run
+## How to Run the Analysis on the Stored Responses
 
-Re-running the study against the live API requires your own TypeSafe API key (`TYPESAFE_API_KEY`) and Poisson Prove. Poisson Prove is currently pre-release and in testing, and is not yet public.
+The paired analysis runs on the stored rows in `data/store/` with the published
+[Poisson Prove](https://poissonlabs.ai/tools/prove/). No model is called and no key is needed:
 
-With the `proofload` CLI installed and your key exported:
+```bash
+pip install poisson-prove
+poisson-prove paired --declaration jev_decl_study.toml --store data/store --out paired/
+```
+
+It writes the six files in `data/paired/`: the same counts, and intervals that agree to the
+last few floating-point digits (checked with `poisson-prove` 0.2.2). A walk-through is at
+[poissonlabs.ai/docs/examples/check-whether-the-same-request-gets-the-same-decision/](https://poissonlabs.ai/docs/examples/check-whether-the-same-request-gets-the-same-decision/).
+
+## How the Sweeps Were Run
+
+Re-running the sweeps against the live API requires your own TypeSafe API key (`TYPESAFE_API_KEY`).
+
+The sweeps were run in September 2026 with a pre-release build of Poisson Prove, whose package
+and command were then named `proofload`. `jev_harness.py` imports that package under that name
+and has not been ported to the published `poisson-prove`, so the commands below are the record
+of what was run, not commands that work against the published package today:
 
 ```bash
 export TYPESAFE_API_KEY="your-api-key"
